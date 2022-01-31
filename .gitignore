@@ -2,3 +2,5 @@ HELP.md
 .gradle
 .idea
 build/
+./src/main/generated
+.out

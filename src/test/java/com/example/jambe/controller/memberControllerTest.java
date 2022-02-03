@@ -7,32 +7,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IndexController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
-})
-@WithMockUser
-public class indexControllerTest {
+        })
+
+public class memberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles={"GUEST"})
-    public void 메인페이지_로딩() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("jambe")));
+    public void oauth2_로그인테스트() throws Exception {
+        mockMvc.perform(get("/login").with(oauth2Login()
+                        .authorities(new SimpleGrantedAuthority("ROLE_GUEST"))
+                        .attributes(attributes -> {
+                            attributes.put("username", "cksgnlcjswo");
+                            attributes.put("name", "찬휘킴");
+                            attributes.put("email", "cksgnlcjswoo@naver.com");
+                })))
+                .andExpect(status().isOk());
     }
 }

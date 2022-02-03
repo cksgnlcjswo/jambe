@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-hello world!
+jambe project
+
+<div sec:authorize="isAnonymous()">
+    <form action="/user/signup" method="GET">
+        <input type="submit" value="회원가입은 여기입니다."/>
+    </form>
+
+    <form action="/auth/login" method="GET">
+        <input type="submit" value="로그인은 여기"/>
+    </form>
+
+    <form action="" method="GET">
+        <input type="submit" value="게시판은 여기"/>
+    </form>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <span id="welcome" sec:authentication="principal.username">님 환영합니다.&nbsp;</span>
+    <a href="/logout">logout</a>
+</div>
 </body>
 </html>

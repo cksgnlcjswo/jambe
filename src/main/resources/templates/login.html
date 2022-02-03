@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+
+            <form method="post" action="/user/login" style="padding-top: 20px;">
+                <input type="text" id="login" class="fadeIn second" name="username" placeholder="아이디를 입력하세요"/>
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="비밀번호를 입력하세요"/>
+                <input style="margin-bottom:0px" type="submit" class="fadeIn fourth" value="Log In" />
+            </form>
+
+           <a href="/oauth2/authorization/google">
+                <img src="/images/google.png" class="d-block ui-w-40 rounded-circle" alt="없음"/>
+           </a>
+
+            <div id="formFooter">
+                <a class="underlineHover" href="/user/signup">회원가입 하러가기</a><br>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

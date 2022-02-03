@@ -14,6 +14,7 @@ public class MemberDto {
     private Long id;
     private String account;
     private String name;
+    private String nickname;
     private String email;
     private String passwd;
     private Role role;
@@ -23,6 +24,7 @@ public class MemberDto {
                 .id(id)
                 .account(account)
                 .name(name)
+                .nickname(nickname)
                 .email(email)
                 .passwd(passwd)
                 .role(Role.GUEST)

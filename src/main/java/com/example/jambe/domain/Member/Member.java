@@ -2,6 +2,7 @@ package com.example.jambe.domain.Member;
 
 import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Role;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

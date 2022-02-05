@@ -24,6 +24,10 @@ jambe project
 <div sec:authorize="isAuthenticated()">
     <span id="welcome" sec:authentication="principal.username">님 환영합니다.&nbsp;</span>
     <a href="/logout">logout</a>
+
+    <div sec:authorize="hasRole('ADMIN')">
+        ----------admin--------
+    </div>
 </div>
 </body>
 </html>

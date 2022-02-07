@@ -1,6 +1,7 @@
 package com.example.jambe.domain.Member;
 
 import com.example.jambe.domain.BaseTimeEntity;
+import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -16,6 +19,7 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="MEMBER_ID")
     private Long id;
 
     @Column(length= 30)
@@ -37,8 +41,18 @@ public class Member extends BaseTimeEntity {
     @Column
     private Role role;
 
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
+
     @Builder
-    public Member(Long id, String account,String name,String nickname,String email, String passwd, Role role) {
+    public Member(Long id,
+                  String account,
+                  String name,
+                  String nickname,
+                  String email,
+                  String passwd,
+                  Role role) {
+
         this.id = id;
         this.account = account;
         this.name = name;

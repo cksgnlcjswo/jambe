@@ -13,6 +13,10 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    public Board findById(Long id) {
+        return boardRepository.findById(id).get();
+    }
+
     public Long save(BoardDto boardDto) {
         return boardRepository.findByCategory(boardDto.getCategory())
                 .orElseGet( () -> boardRepository.save(boardDto.toEntity())).getId();

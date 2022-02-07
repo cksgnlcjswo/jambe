@@ -1,10 +1,13 @@
 package com.example.jambe.dto;
 
 import com.example.jambe.domain.Member.Member;
+import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter

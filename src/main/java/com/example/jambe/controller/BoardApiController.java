@@ -18,7 +18,6 @@ public class BoardApiController {
 
     private final BoardService boardService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     @PostMapping("/api/v1/board")
     public String save(@RequestBody BoardDto boardDto) {
@@ -27,10 +26,22 @@ public class BoardApiController {
         return boardDto.getCategory() + "is created";
     }
 
-    @GetMapping("api/v1/board")
+    //모든 종류의 게시판 보여주기
+    @GetMapping("/api/v1/board")
     public void allBoard(Model model) {
 
         List<Board> boardList = boardService.findAll();
         model.addAttribute("Board",boardList);
+    }
+
+    //종류별 게시판 입장
+    //ex) /api/v1/board?id=1
+    @GetMapping("/api/v1/board/{id}")
+    public void Board(@PathVariable Long id,
+                      Model model) {
+
+        Board board = boardService.findById(id);
+        model.addAttribute("category",board.getCategory());
+        model.addAttribute("posts",board.getPosts());
     }
 }

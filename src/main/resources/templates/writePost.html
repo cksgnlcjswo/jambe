@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h2>글쓰기</h2>
+<form method="POST" action="/api/v1/board/post">
+  <div class="form-group">
+    <label for="title">글 제목</label>
+    <input type="text" class="form-control" name="title" id="title" placeholder="글 제목"/>
+  </div>
+  <div class="form-group">
+    <label for="content">글 내용</label>
+    <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+  </div>
+  <input type="hidden" id="board" name="board" th:value="${boardId}"/>
+  <input type="hidden" id="member" name="member" th:value="${userId}"/>
+  <input type="submit" value="글 등록" id="register" class="btn btn-primary"/>
+</form>
+</div>
+</body>
+</html>

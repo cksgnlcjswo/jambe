@@ -8,7 +8,10 @@ import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Post.PostRepository;
 import com.example.jambe.dto.Post.PostRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,7 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
-    public Long save(PostRequestDto postDto) {
+    public Post save(PostRequestDto postDto) {
         Long boardId = postDto.getBoard();
         Long memberId = postDto.getMember();
 
@@ -30,12 +33,12 @@ public class PostService {
         Post post = Post.builder()
                 .id(postDto.getId())
                 .title(postDto.getTitle())
-                .content(postDto.getTitle()).build();
+                .content(postDto.getContent()).build();
 
         post.setBoard(board);
         post.setMember(member);
 
-        return postRepository.save(post).getId();
+        return postRepository.save(post);
     }
 
     public Post findById(Long boardId,Long postId) {
@@ -49,5 +52,9 @@ public class PostService {
 
         post.update(postDto.getContent(),postDto.getTitle());
         return post.getId();
+    }
+
+    public Page<Post> findAllByBoard(Long id, Pageable pageable) {
+        return postRepository.findAllByBoard(id,pageable);
     }
 }

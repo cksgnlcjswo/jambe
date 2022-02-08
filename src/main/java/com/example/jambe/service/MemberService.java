@@ -41,4 +41,9 @@ public class MemberService implements UserDetailsService {
 
         return new CustomIntegrationDto(member, member.getAccount(), member.getPasswd(), authorities);
     }
+
+    public Long findByName(String username) {
+
+        return memberRepository.findByName(username).get().getId();
+    }
 }

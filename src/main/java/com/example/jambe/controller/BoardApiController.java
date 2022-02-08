@@ -1,13 +1,17 @@
 package com.example.jambe.controller;
 
 import com.example.jambe.domain.Board.Board;
+import com.example.jambe.domain.Post.Post;
 import com.example.jambe.dto.BoardDto;
 import com.example.jambe.service.BoardService;
+import com.example.jambe.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ import java.util.List;
 public class BoardApiController {
 
     private final BoardService boardService;
+    private final PostService postService;
 
     //게시판 생성
     @PostMapping("/api/v1/board")
@@ -24,6 +29,7 @@ public class BoardApiController {
         return "redirect:/";
     }
 
+    //admin용 게시판 생성 화면
     @GetMapping("/board")
     public String make() {
         return "makeBoard";
@@ -36,17 +42,22 @@ public class BoardApiController {
         List<Board> boardList = boardService.findAll();
         model.addAttribute("Board",boardList);
 
-        return "board";
+        return "boardList";
     }
 
     //종류별 게시판 입장
-    //ex) /api/v1/board?id=1
+    //ex) /api/v1/board1/1
     @GetMapping("/api/v1/board/{id}")
-    public void Board(@PathVariable Long id,
-                      Model model) {
+    public String Board(@PathVariable Long id,
+                        @PageableDefault(size = 5) Pageable pageable,
+                        Model model) {
 
         Board board = boardService.findById(id);
-        model.addAttribute("category",board.getCategory());
-        model.addAttribute("posts",board.getPosts());
+        Page<Post> posts = postService.findAllByBoard(id,pageable);
+
+        model.addAttribute("pageCount",posts.getTotalPages());
+        model.addAttribute("Posts",posts);
+        model.addAttribute("Board",board);
+        return "board";
     }
 }

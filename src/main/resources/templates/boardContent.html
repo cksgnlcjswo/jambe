@@ -43,15 +43,41 @@
             <p><a href="#">추후개발</a></p>
         </div>
         <div class="col-sm-8 text-left">
-            <h1 th:text="'제목 : ' + ${post.title}"></h1>
+            <form>
+                <div class="form-gruop">
+                    <label for="id"> 글번호</label>
+                    <input type="text" class="form-control"
+                           id="id" th:value="${post.id}" readonly>
+                </div>
+                <div class="form-gruop">
+                    <label for="title"> 제목</label>
+                    <input type="text" class="form-control"
+                           id="title" th:value="${post.title}">
+                </div>
+                <div class="form-gruop">
+                    <label for="author"> 작성자</label>
+                    <input type="text" class="form-control"
+                           id="author" th:value="${post.member.name}" readonly>
+                </div>
+                <div class="form-gruop">
+                    <label for="content"> 내용</label>
+                    <textarea class="form-control" id="content" rows="10"
+                              th:text="${post.content}"></textarea>
+                </div>
+            </form>
+
+            <br>
+                <a class="btn btn-default btn btn-primary pull-right" id="btn-update" >글 수정</a>
+                <a class="btn btn-default btn btn-secondary pull-right" id="btn-delete">글 삭제</a>
+                <a class="btn btn-default btn pull-right" id="btn-back">취소</a>
+
+            <br/>
+            <br/>
+
+            <h3>댓글</h3>
             <hr>
-            <div th:text="${post.content}">
 
             </div>
-            <h4>댓글</h4>
-            <hr>
-
-        </div>
         <div class="col-sm-2 sidenav">
             <div class="well">
                 <p>ADS</p>
@@ -62,6 +88,6 @@
         </div>
     </div>
 </div>
-
+<script src="/js/boardContent.js"></script>
 </body>
 </html>

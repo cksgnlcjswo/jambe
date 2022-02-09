@@ -2,6 +2,7 @@ package com.example.jambe.controller;
 
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.dto.Post.PostRequestDto;
+import com.example.jambe.dto.Post.PostUpdateRequestDto;
 import com.example.jambe.service.MemberService;
 import com.example.jambe.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,10 @@ public class PostApiController {
     }
 
     //특정 board에서 특정 post 조회
-    @GetMapping("/api/v1/board/{boardId}/post/{postId}")
-    public String findByPostId(@PathVariable Long boardId,
-                             @PathVariable Long postId,
-                             Model model) {
+    @GetMapping("/api/v1/board/post/{postId}")
+    public String findByPostId(@PathVariable Long postId, Model model) {
 
-        Post post = postService.findById(boardId,postId);
+        Post post = postService.findById(postId);
 
         model.addAttribute("post",post);
         /*
@@ -45,7 +44,7 @@ public class PostApiController {
     public String post(@PathVariable Long boardId,
                        Model model,
                        Authentication authentication) {
-        //userId는 소셜 로그인이었으면 아이디이며 자체로그인이었으면 account가 됨
+
         String username = authentication.getName();
         Long id = memberService.findByName(username);
 
@@ -54,10 +53,16 @@ public class PostApiController {
         return "writePost";
     }
 
-    @PutMapping("/api/v1/board/{boardId}/post/{postId}")
-    public Long update(@PathVariable Long boardId,
-                       @PathVariable Long postId,
-                       @RequestBody PostRequestDto postDto) {
-        return postService.update(boardId,postId,postDto);
+    @ResponseBody
+    @PutMapping("/api/v1/board/post/{postId}")
+    public Long update(@PathVariable Long postId,
+                       @RequestBody PostUpdateRequestDto postDto) {
+        return postService.update(postId,postDto);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/api/v1/board/post/{postId}")
+    public Long delete(@PathVariable Long postId) {
+        return postService.delete(postId);
     }
 }

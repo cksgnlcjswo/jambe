@@ -7,11 +7,9 @@ import com.example.jambe.domain.Member.MemberRepository;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Post.PostRepository;
 import com.example.jambe.dto.Post.PostRequestDto;
+import com.example.jambe.dto.Post.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -41,17 +39,21 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post findById(Long boardId,Long postId) {
-        //boardId와 postId로 원하는 post 리턴하도록.
+    public Post findById(Long postId) {
         return postRepository.findById(postId).get();
     }
 
-    public Long update(Long boardId, Long postId,PostRequestDto postDto) {
-        //board와 postId를 모두 가져올수 있도록 하기
-        Post post = postRepository.findById(boardId).get();
+    public Long update(Long postId, PostUpdateRequestDto postDto) {
 
+        Post post = postRepository.findById(postId).get();
         post.update(postDto.getContent(),postDto.getTitle());
-        return post.getId();
+        return postRepository.save(post).getId();
+    }
+
+    public Long delete(Long postId) {
+        Post post = postRepository.findById(postId).get();
+        postRepository.delete(post);
+        return postId;
     }
 
     public Page<Post> findAllByBoard(Long id, Pageable pageable) {

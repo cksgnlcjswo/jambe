@@ -22,7 +22,7 @@
       <tbody>
       <tr th:each="post : ${Posts}">
         <th th:text="${post.id}"></th>
-        <th><a th:href="@{|/api/v1/board/${Board.id}/post/${post.id}|}" th:text="${post.title}"></a></th>
+        <th><a th:href="@{|/api/v1/board/post/${post.id}|}" th:text="${post.title}"></a></th>
         <th th:text="${post.member.name}"></th>
         <th th:text="${post.createdDate}"></th>
       </tr>

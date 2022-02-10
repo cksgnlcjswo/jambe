@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +24,18 @@ public class BoardApiController {
     private final PostService postService;
 
     //게시판 생성
-    @PostMapping("/api/v1/board")
-    public String save(BoardDto boardDto) {
 
-        boardService.save(boardDto);
-        return "redirect:/";
+    @ResponseBody
+    @PostMapping("/api/v1/board")
+    public ResponseEntity<Board> save(@RequestBody BoardDto boardDto) {
+
+        return new ResponseEntity(boardService.save(boardDto), HttpStatus.CREATED);
     }
 
     //admin용 게시판 생성 화면
     @GetMapping("/board")
     public String make() {
+
         return "makeBoard";
     }
 
@@ -58,6 +62,7 @@ public class BoardApiController {
         model.addAttribute("pageCount",posts.getTotalPages());
         model.addAttribute("Posts",posts);
         model.addAttribute("Board",board);
+
         return "board";
     }
 }

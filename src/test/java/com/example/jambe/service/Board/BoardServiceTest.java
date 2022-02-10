@@ -13,8 +13,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -45,14 +48,34 @@ public class BoardServiceTest {
         boardList.add(board3);
 
         when(boardRepository.findAll()).thenReturn(boardList);
+        when(boardRepository.save(any(Board.class))).thenReturn(board1);
+        when(boardRepository.findById(anyLong())).thenReturn(Optional.of(board1));
         boardService = new BoardService(boardRepository);
     }
 
+    @Test
+    public void findById_테스트() {
+        BoardDto boardDto = new BoardDto(1L,"LOL");
+        boardService.save(boardDto);
+        Board board = boardService.findById(boardDto.getId());
+
+
+    }
     @Test
     public void findAll_테스트() {
 
         List<Board> boardList = boardService.findAll();
         assertThat(boardList.size()).isEqualTo(3);
+    }
 
+    @Test
+    public void save_테스트() {
+        BoardDto boardDto = new BoardDto(1L,"LOL");
+
+        Board board1 = boardService.save(boardDto);
+        Board board2 = boardRepository.findById(1L).get();
+
+        assertThat(board2.getId()).isEqualTo(boardDto.getId());
+        assertThat(board2.getCategory()).isEqualTo(boardDto.getCategory());
     }
 }

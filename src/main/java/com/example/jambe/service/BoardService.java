@@ -17,9 +17,9 @@ public class BoardService {
         return boardRepository.findById(id).get();
     }
 
-    public Long save(BoardDto boardDto) {
+    public Board save(BoardDto boardDto) {
         return boardRepository.findByCategory(boardDto.getCategory())
-                .orElseGet( () -> boardRepository.save(boardDto.toEntity())).getId();
+                .orElseGet( () -> boardRepository.save(boardDto.toEntity()));
     }
 
     public List<Board> findAll() {

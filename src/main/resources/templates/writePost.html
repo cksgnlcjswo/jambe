@@ -9,8 +9,8 @@
 </head>
 <body>
 <div class="container">
-  <h2>글쓰기</h2>
-<form method="POST" action="/api/v1/board/post">
+  <h2>글 작성</h2>
+<form>
   <div class="form-group">
     <label for="title">글 제목</label>
     <input type="text" class="form-control" name="title" id="title" placeholder="글 제목"/>
@@ -21,8 +21,9 @@
   </div>
   <input type="hidden" id="board" name="board" th:value="${boardId}"/>
   <input type="hidden" id="member" name="member" th:value="${userId}"/>
-  <input type="submit" value="글 등록" id="register" class="btn btn-primary"/>
+  <button type="button" id="register" class="btn btn-primary">글 등록</button>
 </form>
 </div>
+<script src="/js/writePost.js"></script>
 </body>
 </html>

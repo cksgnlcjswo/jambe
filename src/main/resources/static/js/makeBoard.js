@@ -1,22 +1,22 @@
 var main = {
-    init : () => {
-
+    init : function() {
         var _this = this;
-        document.getElementById("btn-create").onclick = () => {
-            _this.create();
-        }
+        document.getElementById("btn-create").addEventListener("click", function() {
+            _this.save();
+        });
     },
 
-    create: async () => {
+    save : async function() {
         let category = document.getElementById('category').value;
-        const url = /api/v1/board;
+        console.log("category is: ",category);
+        let url = "/api/v1/board";
 
         const data = {
             category:category
         }
 
         const config = {
-             method: 'POSt',
+             method: 'POST',
              headers: {
                  'Content-Type' : 'application/json',
              },
@@ -25,13 +25,15 @@ var main = {
 
         const response = await fetch(url,config);
 
-        if(response.status==201) {
+        console.log(response)
+        if(response.ok) {
+             console.log("?")
              alert('게시판이 등록되었습니다.');
              window.location.href="/";
         } else {
              console.log("error!");
         }
     }
-}
+};
 
-main.init()
+main.init();

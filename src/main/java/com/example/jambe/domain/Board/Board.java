@@ -2,6 +2,8 @@ package com.example.jambe.domain.Board;
 
 import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Post.Post;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Board extends BaseTimeEntity {
 
     @Id

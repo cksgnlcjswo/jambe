@@ -3,6 +3,8 @@ package com.example.jambe.domain.Member;
 import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Role;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Member extends BaseTimeEntity {
 
     @Id

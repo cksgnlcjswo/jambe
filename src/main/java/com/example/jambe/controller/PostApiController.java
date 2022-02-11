@@ -2,10 +2,12 @@ package com.example.jambe.controller;
 
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.dto.Post.PostRequestDto;
+import com.example.jambe.dto.Post.PostResponseDto;
 import com.example.jambe.dto.Post.PostUpdateRequestDto;
 import com.example.jambe.service.MemberService;
 import com.example.jambe.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +21,12 @@ public class PostApiController {
     private final MemberService memberService;
 
     //특정 board에서 post저장
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/board/post")
-    public String save(PostRequestDto postDto) {
-        postService.save(postDto);
-        return "redirect:/api/v1/board/"+postDto.getBoard();
+    public PostResponseDto save(@RequestBody PostRequestDto postDto) {
+        Long postId = postService.save(postDto);
+        return Post.convertDto(postService.findById(postId));
     }
 
     //특정 board에서 특정 post 조회
@@ -61,6 +65,7 @@ public class PostApiController {
     }
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/v1/board/post/{postId}")
     public Long delete(@PathVariable Long postId) {
         return postService.delete(postId);

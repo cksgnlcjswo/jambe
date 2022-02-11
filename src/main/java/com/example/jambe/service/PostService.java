@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -21,7 +23,7 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
-    public Post save(PostRequestDto postDto) {
+    public Long save(PostRequestDto postDto) {
         Long boardId = postDto.getBoard();
         Long memberId = postDto.getMember();
 
@@ -36,7 +38,7 @@ public class PostService {
         post.setBoard(board);
         post.setMember(member);
 
-        return postRepository.save(post);
+        return postRepository.save(post).getId();
     }
 
     public Post findById(Long postId) {

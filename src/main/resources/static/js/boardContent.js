@@ -11,7 +11,7 @@ var main = {
         }
     },
 
-    update : async () => {
+    update : async function() {
         let title = document.getElementById('title').value;
         let content = document.getElementById('content').value;
         let id = document.getElementById('id').value;
@@ -38,7 +38,7 @@ var main = {
         }
     },
 
-    delete : async () => {
+    delete : async function() {
         let id = document.getElementById('id').value;
         const url = '/api/v1/board/post/' + id;
 

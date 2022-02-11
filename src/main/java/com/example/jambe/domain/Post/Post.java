@@ -3,6 +3,9 @@ package com.example.jambe.domain.Post;
 import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Board.Board;
 import com.example.jambe.domain.Member.Member;
+import com.example.jambe.dto.Post.PostResponseDto;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -66,5 +70,15 @@ public class Post extends BaseTimeEntity {
 
         this.content = content;
         this.title = title;
+    }
+
+    static public PostResponseDto convertDto(Post post) {
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .board(post.getBoard())
+                .content(post.getContent())
+                .title(post.getTitle())
+                .member(post.getMember())
+                .build();
     }
 }

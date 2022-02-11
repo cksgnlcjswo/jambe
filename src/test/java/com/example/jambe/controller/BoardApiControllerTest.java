@@ -1,6 +1,10 @@
 package com.example.jambe.controller;
 
 import com.example.jambe.domain.Board.Board;
+import com.example.jambe.domain.Board.BoardRepository;
+import com.example.jambe.domain.Member.Member;
+import com.example.jambe.domain.Post.Post;
+import com.example.jambe.domain.Role;
 import com.example.jambe.dto.BoardDto;
 import com.example.jambe.service.BoardService;
 import com.example.jambe.service.PostService;
@@ -11,6 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,11 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,6 +49,9 @@ public class BoardApiControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private BoardRepository boardRepository;
 
     @MockBean private BoardService boardService;
     @MockBean private PostService postService;
@@ -94,5 +106,48 @@ public class BoardApiControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().string(containsString("sports")));
+    }
+
+    @Test
+    @Transactional
+    public void 페이징_테스트() throws Exception {
+
+        List<Post> postList = new ArrayList<>();
+        Board board = Board.builder()
+                .id(1L)
+                .category("LOL").build();
+        Member member = Member.builder()
+                        .id(1L)
+                        .account("cksgnlcjswo")
+                        .name("kim")
+                        .nickname("메롱")
+                .email("cksgnlcjswooN@naver.com")
+                .passwd("1234")
+                .role(Role.GUEST).build();
+
+        boardRepository.save(board);
+
+        //dummy data 생성
+        for(long i=1;i<=85;++i) {
+            Post post = Post.builder()
+                    .id(i)
+                    .title("tmp"+i)
+                    .content("test").build();
+            post.setBoard(board);
+            post.setMember(member);
+
+            postList.add(post);
+        }
+
+        Pageable pageable = PageRequest.of(1,5);
+
+        Page<Post> posts = new PageImpl<>(postList,pageable,10);
+
+        when(postService.findAllByBoard(1L,pageable)).thenReturn(posts);
+        when(boardService.findById(anyLong())).thenReturn(board);
+
+        mockMvc.perform(get("/api/v1/board/1?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("tmp6")));
     }
 }

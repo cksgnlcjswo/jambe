@@ -1,8 +1,10 @@
 package com.example.jambe.domain.Member;
 
 import com.example.jambe.domain.BaseTimeEntity;
+import com.example.jambe.domain.Comment.Comment;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Role;
+import com.example.jambe.dto.Member.MemberResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
@@ -47,14 +49,16 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public Member(Long id,
                   String account,
                   String name,
                   String nickname,
                   String email,
-                  String passwd,
-                  Role role) {
+                  String passwd) {
 
         this.id = id;
         this.account = account;
@@ -62,7 +66,7 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
         this.email = email;
         this.passwd = passwd;
-        this.role = role;
+        this.role = Role.GUEST;
     }
 
     public String getRoleKey() {
@@ -74,5 +78,12 @@ public class Member extends BaseTimeEntity {
         this.email = email;
 
         return this;
+    }
+
+    public static MemberResponseDto convertToResponseDto(Member member) {
+        return MemberResponseDto.builder()
+                .name(member.getName())
+                .account(member.getAccount())
+                .email(member.getEmail()).build();
     }
 }

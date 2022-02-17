@@ -3,7 +3,7 @@ package com.example.jambe.service;
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.domain.Member.MemberRepository;
 import com.example.jambe.dto.CustomIntegrationDto;
-import com.example.jambe.dto.MemberDto;
+import com.example.jambe.dto.Member.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -122,8 +122,7 @@ public class BoardApiControllerTest {
                         .name("kim")
                         .nickname("메롱")
                 .email("cksgnlcjswooN@naver.com")
-                .passwd("1234")
-                .role(Role.GUEST).build();
+                .passwd("1234").build();
 
         boardRepository.save(board);
 

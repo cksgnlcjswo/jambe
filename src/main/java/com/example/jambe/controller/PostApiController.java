@@ -1,32 +1,46 @@
 package com.example.jambe.controller;
 
+import com.example.jambe.domain.Comment.Comment;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.dto.Post.PostRequestDto;
 import com.example.jambe.dto.Post.PostResponseDto;
 import com.example.jambe.dto.Post.PostUpdateRequestDto;
+import com.example.jambe.service.CommentService;
 import com.example.jambe.service.MemberService;
 import com.example.jambe.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class PostApiController {
 
+    private static Logger logger = LoggerFactory.getLogger(PostApiController.class);
     private final PostService postService;
     private final MemberService memberService;
+    private final CommentService commentService;
 
     //특정 board에서 post저장
-    @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/board/post")
-    public PostResponseDto save(@RequestBody PostRequestDto postDto) {
+    public ResponseEntity<PostResponseDto> save(@RequestBody PostRequestDto postDto) {
         Long postId = postService.save(postDto);
-        return Post.convertDto(postService.findById(postId));
+        Post post = postService.findById(postId);
+
+        return new ResponseEntity(PostResponseDto.builder()
+                .id(post.getId())
+                .board(post.getBoard().getCategory())
+                .member(post.getMember().getName())
+                .content(post.getContent())
+                .title(post.getTitle()).build(),HttpStatus.CREATED);
     }
 
     //특정 board에서 특정 post 조회
@@ -36,9 +50,9 @@ public class PostApiController {
         Post post = postService.findById(postId);
 
         model.addAttribute("post",post);
-        /*
-        * 댓글 처리
-        * */
+
+        List<Comment> commentList = commentService.findByPostId(postId);
+        model.addAttribute("commentList",commentList);
 
         return "boardContent";
     }

@@ -11,13 +11,13 @@ import lombok.*;
 public class PostResponseDto {
 
     private Long id;
-    private Board board;
-    private Member member;
+    private String board;
+    private String member;
     private String content;
     private String title;
 
     @Builder
-    public PostResponseDto(Long id, Board board, Member member, String content, String title) {
+    public PostResponseDto(Long id, String board, String member, String content, String title) {
         this.id =id;
         this.board = board;
         this.member = member;

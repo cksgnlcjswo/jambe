@@ -1,4 +1,4 @@
-package com.example.jambe.dto;
+package com.example.jambe.dto.Member;
 
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.domain.Post.Post;
@@ -20,7 +20,6 @@ public class MemberDto {
     private String nickname;
     private String email;
     private String passwd;
-    private Role role;
 
     public Member toEntity() {
         return Member.builder()
@@ -30,7 +29,6 @@ public class MemberDto {
                 .nickname(nickname)
                 .email(email)
                 .passwd(passwd)
-                .role(Role.GUEST)
                 .build();
     }
 }

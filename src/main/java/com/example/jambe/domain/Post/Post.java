@@ -2,6 +2,7 @@ package com.example.jambe.domain.Post;
 
 import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Board.Board;
+import com.example.jambe.domain.Comment.Comment;
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.dto.Post.PostResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -33,6 +36,9 @@ public class Post extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="BOARD_ID")
     private Board board;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(length=100)
     private String content;
@@ -72,13 +78,4 @@ public class Post extends BaseTimeEntity {
         this.title = title;
     }
 
-    static public PostResponseDto convertDto(Post post) {
-        return PostResponseDto.builder()
-                .id(post.getId())
-                .board(post.getBoard())
-                .content(post.getContent())
-                .title(post.getTitle())
-                .member(post.getMember())
-                .build();
-    }
 }

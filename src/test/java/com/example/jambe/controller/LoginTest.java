@@ -2,12 +2,15 @@ package com.example.jambe.controller;
 
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.domain.Member.MemberRepository;
-import com.example.jambe.domain.Role;
+import com.example.jambe.dto.Member.MemberDto;
+import com.example.jambe.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -17,12 +20,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +38,7 @@ public class LoginTest {
     private WebApplicationContext context;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -47,15 +51,6 @@ public class LoginTest {
                 .webAppContextSetup(this.context)
                 .apply(springSecurity())
                 .build();
-
-        memberRepository.save(Member.builder()
-                .id(1L)
-                .account("cksgnlcjswo")
-                .name("찬휘킴")
-                .nickname("메롱")
-                .email("cksgnlcjswoo@naver.com")
-                .passwd(passwordEncoder.encode("759azs"))
-                .role(Role.GUEST).build());
     }
 
     @Transactional
@@ -63,13 +58,36 @@ public class LoginTest {
     @Test
     public void 자체로그인_테스트() throws Exception {
         // given
-        String userId = "cksgnlcjswo";
-        String password = "759azs";
+        MemberDto memberDto = new MemberDto();
+        memberDto.setAccount("cksgnlcjswo");
+        memberDto.setPasswd("759azs");
+        memberDto.setName("cksgnl");
+        memberDto.setNickname("메롱");
+        memberDto.setEmail("cksgnlcjswoo@naver.com");
+
+        String userId = memberDto.getAccount();
+        String password = memberDto.getPasswd();
+
+        memberService.joinUser(memberDto);
 
         // when
         mvc.perform(formLogin("/user/login").user(userId).password(password))
                 // then
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void oauth2_로그인테스트() throws Exception {
+        mvc.perform(get("/auth/login").with(oauth2Login()
+                        .authorities(new SimpleGrantedAuthority("ROLE_GUEST"))
+                        .attributes(attributes -> {
+                            attributes.put("username", "cksgnlcjswo");
+                            attributes.put("name", "찬휘킴");
+                            attributes.put("email", "cksgnlcjswoo@naver.com");
+                        })))
+                .andExpect(status().isOk())
+                .andExpect(authenticated());
     }
 }

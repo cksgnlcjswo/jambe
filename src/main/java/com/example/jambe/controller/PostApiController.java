@@ -24,7 +24,6 @@ import java.util.List;
 @Controller
 public class PostApiController {
 
-    private static Logger logger = LoggerFactory.getLogger(PostApiController.class);
     private final PostService postService;
     private final MemberService memberService;
     private final CommentService commentService;

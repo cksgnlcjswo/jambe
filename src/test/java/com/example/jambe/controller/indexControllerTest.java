@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IndexController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -33,12 +32,12 @@ public class indexControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("jambe")));
     }
-
+    /*
     @Test
     @WithMockUser(roles={"ADMIN"})
     public void 어드민페이지_로딩() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("admin")));
-    }
+    }*/
 }

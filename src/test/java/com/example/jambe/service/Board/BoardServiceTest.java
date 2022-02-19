@@ -59,7 +59,7 @@ public class BoardServiceTest {
         boardService.save(boardDto);
         Board board = boardService.findById(boardDto.getId());
 
-
+        assertThat(board.getId()).isEqualTo(1L);
     }
     @Test
     public void findAll_테스트() {

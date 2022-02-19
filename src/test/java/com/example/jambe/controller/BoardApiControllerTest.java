@@ -1,67 +1,53 @@
 package com.example.jambe.controller;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.example.jambe.config.SecurityConfig;
 import com.example.jambe.domain.Board.Board;
-import com.example.jambe.domain.Board.BoardRepository;
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.domain.Post.Post;
-import com.example.jambe.domain.Role;
 import com.example.jambe.dto.BoardDto;
 import com.example.jambe.service.BoardService;
 import com.example.jambe.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(controllers = BoardApiController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+        })
 public class BoardApiControllerTest {
 
-    private MockMvc mockMvc;
-
     @Autowired
-    private WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private BoardRepository boardRepository;
-
     @MockBean private BoardService boardService;
     @MockBean private PostService postService;
-
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
 
     @Test
     @WithMockUser(roles="ADMIN")
@@ -75,13 +61,15 @@ public class BoardApiControllerTest {
 
         mockMvc.perform(post("/api/v1/board")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(boardDto)))
+                        .content(objectMapper.writeValueAsString(boardDto))
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.category").value("LOL"));
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void 모든게시판종류가져오기_테스트() throws Exception {
         Board board1 = Board.builder()
                 .id(1L)
@@ -102,14 +90,16 @@ public class BoardApiControllerTest {
 
         when(boardService.findAll()).thenReturn(boardList);
 
-        mockMvc.perform(get("/api/v1/board"))
+        mockMvc.perform(get("/api/v1/board").with(csrf()))
                 .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().string(containsString("sports")));
+                .andExpect(view().name("boardList"))
+                .andExpect(model().attributeExists("Board")) //Board라는 모델이 context variable이 존재하는지
+                .andExpect(model().attribute("Board", IsCollectionWithSize.hasSize(3))); // jobs model의 size가 3인지 확인
+
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles="USER")
     public void 페이징_테스트() throws Exception {
 
         List<Post> postList = new ArrayList<>();
@@ -123,8 +113,6 @@ public class BoardApiControllerTest {
                         .nickname("메롱")
                 .email("cksgnlcjswooN@naver.com")
                 .passwd("1234").build();
-
-        boardRepository.save(board);
 
         //dummy data 생성
         for(long i=1;i<=85;++i) {

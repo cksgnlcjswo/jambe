@@ -4,6 +4,7 @@ import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Comment.Comment;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.domain.Role;
+import com.example.jambe.domain.SubComment.SubComment;
 import com.example.jambe.dto.Member.MemberResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -51,6 +52,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<SubComment> subComments = new ArrayList<>();
 
     @Builder
     public Member(Long id,

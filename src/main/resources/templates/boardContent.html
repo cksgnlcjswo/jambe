@@ -180,28 +180,33 @@ a {
                                     <div class="post-comments">
                                         <p class="meta">
                                             <a href="#" th:text="${comment.member.name}"></a>
-                                            <i class="pull-right"><button type="button" id="btn-subComment">Reply</button></i>
+                                            <i class="pull-right"><button type="button" th:id="'btn-subComment'+${commentStat.index}">Reply</button></i>
                                         </p>
                                         <p th:text="${comment.content}">
 
                                         </p>
                                     </div>
+                                    <form class="clearfix" th:id ="'sub-comment-form'+${commentStat.index}">
+                                        <div class="form-group">
+                                            <textarea class="form-control m-5" rows="5" id="subComment"></textarea>
+                                        </div>
+                                    </form>
                                 </li>
-                                <!--
-                                <li class="clearfix">
+
+                                <li class="clearfix" th:each="subComment : ${comment.subComments}">
 
                                     <ul class="comments">
                                         <li class="clearfix">
                                             <img src="/images/defaultUser.png" class="avatar" alt="">
                                             <div class="post-comments">
-                                                <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <a href="#"><button type="button">Reply</button></a></p>
-                                                <p>
+                                                <p class="meta"><a href="#" th:text="${subComment.member.name}"></a></p>
+                                                <p th:text="${subComment.content}">
 
                                                 </p>
                                             </div>
                                         </li>
                                     </ul>
-                                </li>-->
+                                </li>
                             </ul>
                             <div class="container">
 

@@ -4,6 +4,7 @@ import com.example.jambe.domain.BaseTimeEntity;
 import com.example.jambe.domain.Board.Board;
 import com.example.jambe.domain.Member.Member;
 import com.example.jambe.domain.Post.Post;
+import com.example.jambe.domain.SubComment.SubComment;
 import com.example.jambe.dto.Comment.CommentResponseDto;
 import lombok.Builder;
 import lombok.Generated;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -33,6 +36,9 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="MEMBER_ID")
     private Member member;
+
+    @OneToMany(mappedBy = "comment")
+    private List<SubComment> subComments = new ArrayList<>();
 
     @Builder
     public Comment(Long id, String content) {

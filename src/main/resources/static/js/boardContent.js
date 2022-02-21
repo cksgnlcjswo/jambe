@@ -2,6 +2,15 @@ var main = {
     init : function() {
         var _this = this;
 
+        for(let i=0;;++i) {
+            let form = document.getElementById("btn-subComment"+i);
+            if(form == null) break;
+            document.getElementById("sub-comment-form"+i).style.display="none";
+            form.onclick = function() {
+                _this.toggle(i);
+            }
+        }
+
         document.getElementById('btn-update').onclick = function() {
             _this.update();
         }
@@ -10,17 +19,27 @@ var main = {
             _this.delete();
         }
 
-        document.getElementById('btn-commentCreate').onclick() = function() {
+        document.getElementById('btn-commentCreate').onclick = function() {
             _this.commentCreate();
         }
     },
+
+    toggle : function(i) {
+        let form = document.getElementById("sub-comment-form"+i);
+          if (form.style.display === "none") {
+            form.style.display = "block";
+          } else {
+            form.style.display = "none";
+          }
+    },
+
     commentCreate : async function() {
         let comment = document.getElementById('comment').value;
         let post = document.getElementById('id').value;
         const url = "/api/v1/board/post/comment";
 
         const data = {
-            content: comment;
+            content: comment,
             post: post
         }
 

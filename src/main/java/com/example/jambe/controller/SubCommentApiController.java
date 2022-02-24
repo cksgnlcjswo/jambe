@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 
@@ -19,6 +20,7 @@ public class SubCommentApiController {
 
     private final SubCommentService subCommentService;
 
+    @ResponseBody
     @PostMapping("/api/v1/board/post/sub-comment")
     public ResponseEntity<SubCommentResponseDto> addsubComment(@RequestBody SubCommentRequestDto subCommentRequestDto,
                                                                Principal principal) {

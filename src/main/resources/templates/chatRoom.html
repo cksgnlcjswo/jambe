@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>채팅방에 오신것을 환영합니다.</h2>
+
+<div class="list-group" th:each="chatRoom : ${chatRoomList}">
+    <a th:href="@{/chat/room/(id=${chatRoom.id})}" class="list-group-item list-group-item-action" th:text="${chatRoom.name}">
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -5,6 +5,7 @@
     <title>Title</title>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/chat.css" />
 
@@ -72,6 +73,7 @@
 </div>
 <script type="text/javascript" th:inline="javascript">
     var username = [[${#authentication.principal.username}]];
+    var roomId = [[${chatRoom.id}]];
 </script>
 <script src="/js/chat.js"></script>
 </body>

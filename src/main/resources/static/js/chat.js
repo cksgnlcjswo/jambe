@@ -1,72 +1,56 @@
 var main = {
     init: function() {
         var _this = this;
-        var sockJs = new SockJS("http://localhost:8080/ws/api/v1/chat");
+        var sockJs = new SockJS("/api/v1/chat");
+        var stomp = Stomp.over(sockJs);
 
         document.getElementById('btn-send').onclick = function() {
             send();
         }
 
-        sockJs.onmessage = onMessage;
-        sockJs.onopen = onOpen;
-        sockJs.onclose = onClose;
+        stomp.connect({}, function() {
+            console.log("STOMP connection");
 
-        function onMessage(event) {
+            stomp.subscribe("/sub/chat/room/" + roomId, function(msg) {
+                let data = JSON.parse(msg.body);
 
-            let data = JSON.parse(event.data);
-            console.log(data);
-            let id = data.id;
-            let text = data.text;
+                let text = data.message;
+                let writer = data.writer;
 
-            //현재 로그인한 사용자라면
-            if(username == id) {
+                 if(writer == username) {
 
-                let ret="<li class='clearfix'>";
-                    ret += "<div class='message-data text-right'>";
-                    ret += "<span class='message-data-time'>10:10 AM, Today</span>";
-                    ret += "<img src='#' alt='avatar'></div>";
-                    ret += "<div class='message other-message float-right'>" + text + "</div></li>";
-                    $('#chat-area').append(ret);
-            } else {
+                    let ret="<li class='clearfix'>";
+                        ret += "<div class='message-data text-right'>";
+                        ret += "<span class='message-data-time'>10:10 AM, Today</span>";
+                        ret += "<img src='#' alt='avatar'></div>";
+                        ret += "<div class='message other-message float-right'>" + text + "</div></li>";
+                         $('#chat-area').append(ret);
+                    } else {
 
-                let ret = "<li class='clearfix'>";
-                    ret += "<div class='message-data'>";
-                    ret += "<span class='message-data-time'></span></div>";
-                    ret += "<div class='message my-message'>"+ text +"</div></li>";
-                    $('#chat-area').append(ret);
-            }
-        }
+                      let ret = "<li class='clearfix'>";
+                          ret += "<div class='message-data'>";
+                          ret += "<span class='message-data-time'></span></div>";
+                          ret += "<div class='message my-message'>"+ text +"</div></li>";
+                          $('#chat-area').append(ret);
+                    }
+            });
 
-        function onOpen(event) {
-
-            const text = username + " 님이 입장하셨습니다.";
-            const msg = {
-                id: username,
-                text: text
-            }
-            sockJs.send(JSON.stringify(msg));
-        }
-
-        function onClose(event) {
-
-            const text = username + " 님이 퇴장하셨습니다.";
-
-            const msg = {
-                id: username,
-                text: text
-            }
-            sockJs.send(JSON.stringify(msg));
-        }
+            stomp.send('/pub/chat/enter', {},JSON.stringify({
+                roomId: roomId,
+                writer: username
+            }));
+        });
 
         function send() {
-            let msg = document.getElementById("msg").value;
+            let text = document.getElementById("msg").value;
 
             const message = {
-                id: username,
-                text: msg
+                roomId: roomId,
+                writer:username,
+                message: text
             }
 
-            sockJs.send(JSON.stringify(message));
+            stomp.send('/pub/chat/message',{},JSON.stringify(message));
             document.getElementById("msg").value = "";
         }
     }

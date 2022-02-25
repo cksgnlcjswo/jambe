@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="/css/chat.css" />
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/chat.css" />
+
 </head>
 <body>
 <div class="container">
@@ -68,84 +70,9 @@
         </div>
     </div>
 </div>
-<script th:inline="javascript">
-var main = {
-    init: function() {
-        var _this = this;
-        var webSocket = new WebSocket("ws://localhost:8080/ws/api/v1/chat");
-        var username = [[${#authentication.principal.username}]];
-
-        document.getElementById('btn-send').onclick = function() {
-            send();
-        }
-
-        webSocket.onmessage = onMessage;
-        webSocket.onopen = onOpen;
-        webSocket.onclose = onClose;
-
-        function onMessage(event) {
-
-            let data = JSON.parse(event.data);
-            console.log(data);
-            let id = data.id;
-            let text = data.text;
-
-            //현재 로그인한 사용자라면
-            if(username == id) {
-
-                let ret="<li class='clearfix'>";
-                    ret += "<div class='message-data text-right'>";
-                    ret += "<span class='message-data-time'>10:10 AM, Today</span>";
-                    ret += "<img src='#' alt='avatar'></div>";
-                    ret += "<div class='message other-message float-right'>" + text + "</div></li>";
-                    $('#chat-area').append(ret);
-            } else {
-
-                let ret = "<li class='clearfix'>";
-                    ret += "<div class='message-data'>";
-                    ret += "<span class='message-data-time'></span></div>";
-                    ret += "<div class='message my-message'>"+ text +"</div></li>";
-                    $('#chat-area').append(ret);
-            }
-        }
-
-        function onOpen(event) {
-
-            const text = username + " 님이 입장하셨습니다.";
-            const msg = {
-                id: username,
-                text: text
-            }
-            webSocket.send(JSON.stringify(msg));
-        }
-
-        function onClose(event) {
-
-            const text = username + " 님이 퇴장하셨습니다.";
-
-            const msg = {
-                id: username,
-                text: text
-            }
-            webSocket.send(JSON.stringify(msg));
-        }
-
-        function send() {
-            let msg = document.getElementById("msg").value;
-
-            const message = {
-                id: username,
-                text: msg
-            }
-
-            webSocket.send(JSON.stringify(message));
-            document.getElementById("msg").value = "";
-        }
-    }
-}
-
-main.init();
-
+<script type="text/javascript" th:inline="javascript">
+    var username = [[${#authentication.principal.username}]];
 </script>
+<script src="/js/chat.js"></script>
 </body>
 </html>

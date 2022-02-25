@@ -17,6 +17,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 
-        registry.addHandler(chatHandler, "ws/api/v1/chat").setAllowedOrigins("*");
+        registry.addHandler(chatHandler, "ws/api/v1/chat")
+                .setAllowedOrigins("http://localhost:8080")
+                .withSockJS()
+                .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.js");
     }
 }

@@ -1,14 +1,17 @@
 package com.example.jambe.dto;
 
 import com.example.jambe.domain.Member.Member;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.util.*;
 
-@Getter
+@Data
 public class CustomIntegrationDto implements IntegrationMember{
     private Long id;
     private String name;
@@ -20,8 +23,8 @@ public class CustomIntegrationDto implements IntegrationMember{
 
     public CustomIntegrationDto(Member member, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         new User(username, password, authorities);
-        this.name = member.getName();
-        this.passwd = member.getPasswd();
+        this.name = username;
+        this.passwd = password;
         this.id = member.getId();
         this.authorities = Collections.unmodifiableSet(new LinkedHashSet<>(this.sortAuthorities(authorities)));
     }

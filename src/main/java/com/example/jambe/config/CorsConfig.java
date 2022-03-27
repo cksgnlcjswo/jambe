@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
 
@@ -14,9 +16,10 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // js에서 json 처리 가능하도록
-        config.addAllowedOrigin("*"); //모든 ip 응답허용
-        config.addAllowedHeader("*"); //모든 헤더 응답 허용
-        config.addAllowedMethod("*"); //모든 메소드 응답 허용
+        config.setAllowedOrigins(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("*"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setExposedHeaders(Arrays.asList("Authorization"));
         source.registerCorsConfiguration("/**",config);
         return new CorsFilter(source);
     }

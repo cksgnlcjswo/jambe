@@ -1,15 +1,15 @@
 package com.example.jambe.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.example.jambe.domain.Member.Member;
-import com.example.jambe.domain.Member.MemberRepository;
 import com.example.jambe.dto.CustomIntegrationDto;
 import com.example.jambe.dto.Member.MemberDto;
+import com.example.jambe.util.ResponseOuterUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,8 +24,10 @@ import java.util.Date;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private AuthenticationManager authenticationManager;
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
+        this.authenticationManager = authenticationManager;
+        //setFilterProcessesUrl() 지정한 url로 로그인 url 설정 가능
     }
 
     @Override
@@ -37,12 +39,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(memberdto.getAccount(),memberdto.getPasswd());
 
-            //memberService에서 customIntegrationDto 반환
-            Authentication authentication = super.getAuthenticationManager().authenticate(authenticationToken);
-            CustomIntegrationDto customIntegrationDto = (CustomIntegrationDto) authentication.getPrincipal();
+            return authenticationManager.authenticate(authenticationToken);
 
-            return authentication;
-
+        } catch(BadCredentialsException badCredentialsException) {
+            ResponseOuterUtil responseOuterUtil = new ResponseOuterUtil(request,response);
+            responseOuterUtil.send("존재하지 않는 비밀번호 입니다.",404);
+        } catch(InternalAuthenticationServiceException internalAuthenticationServiceException) {
+            System.out.println("존재하징 않는 사용자");
+            ResponseOuterUtil responseOuterUtil = new ResponseOuterUtil(request,response);
+            responseOuterUtil.send("존재하지 않는 아이디",401);
         } catch(IOException e) {
             e.printStackTrace();;
         }
@@ -52,16 +57,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
+        System.out.println("login success");
         CustomIntegrationDto customIntegrationDto = (CustomIntegrationDto) authResult.getPrincipal();
 
-        String jwtToken = JWT.create()
-                .withSubject("cos")
-                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*30)))
-                .withClaim("account",customIntegrationDto.getUsername())
-                .withClaim("passwd",customIntegrationDto.getPassword())
-                .sign(Algorithm.HMAC512("sec"));
+        String jwtToken = Jwts.builder()
+                .setSubject(customIntegrationDto.getUsername()) // 사용자
+                .setIssuedAt(new Date()) // 현재 시간 기반으로 생성
+                .setExpiration(new Date(System.currentTimeMillis()+(60000*30))) // 만료 시간 세팅
+                .signWith(SignatureAlgorithm.HS512, "secret") // 사용할 암호화 알고리즘, signature에 들어갈 secret 값 세팅
+                .compact();
 
-        response.addHeader("Authorization","Bearer "+jwtToken);
+        response.addHeader("Authorization",jwtToken);
     }
 }

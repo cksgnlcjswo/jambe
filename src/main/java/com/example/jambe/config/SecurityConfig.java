@@ -3,7 +3,9 @@ package com.example.jambe.config;
 import com.example.jambe.domain.Member.MemberRepository;
 import com.example.jambe.filter.JwtAuthenticationFilter;
 import com.example.jambe.filter.JwtAuthorizationFilter;
+import com.example.jambe.handler.CustomAccessDeniedHandler;
 import com.example.jambe.handler.CustomAuthenticationHandler;
+import com.example.jambe.handler.Oauth2SuccessHandler;
 import com.example.jambe.service.CustomOauth2UserService;
 import com.example.jambe.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final CustomOauth2UserService customOauth2UserService;
     private final MemberRepository memberRepository;
-    @Autowired
-    MemberService memberService;
+    private final MemberService memberService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**","/static/**", "/css/**", "/js/**", "/images/**","/fonts/**");
+        web.ignoring().antMatchers("/resources/**","/static/**", "/css/**", "/js/**", "/images/**","/fonts/**",
+                "/h2-console/**","/resources/templates/**");
     }
 
     @Override
@@ -47,15 +49,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .authenticationEntryPoint(new CustomAuthenticationHandler())
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),memberRepository))
                 .authorizeRequests()
                 .antMatchers( "/user/signup","/auth/login","/","/resources/**","/static/**",
-                        "/css/**", "/js/**", "/images/**","/fonts/**").permitAll()
-                .antMatchers("/board/**").hasRole("ADMIN")
-                .antMatchers("/api/v1/**").hasRole("GUEST")
+                        "/css/**", "/js/**", "/images/**","/fonts/**","/h2-console/**").permitAll()
+           //     .antMatchers("/api/**").hasRole("GUEST")
+            //    .antMatchers("/board").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .logout()
@@ -63,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .oauth2Login()
+                .successHandler(new Oauth2SuccessHandler())
                 .userInfoEndpoint()
                 .userService(customOauth2UserService);
     }
@@ -72,4 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
+    }
 }

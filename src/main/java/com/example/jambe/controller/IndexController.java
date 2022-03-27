@@ -10,7 +10,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String main_page() {
-
+        System.out.println("index page");
         return "index";
     }
 }

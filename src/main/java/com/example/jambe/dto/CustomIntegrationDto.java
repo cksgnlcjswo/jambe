@@ -91,6 +91,6 @@ public class CustomIntegrationDto implements IntegrationMember{
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,10 +23,10 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     public Member joinUser(MemberDto memberDto) {
         // 비밀번호 암호
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPasswd(passwordEncoder.encode(memberDto.getPasswd()));
 
         return memberRepository.save(memberDto.toEntity());
@@ -35,7 +36,6 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
         Member member = memberRepository.findByAccount(account).get();
 
-        System.out.println("loadUserByUsername 호출");
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRoleKey()));
 

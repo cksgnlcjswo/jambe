@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -30,7 +31,7 @@
                     <a class="nav-link active" aria-current="page" href="/user/signup">Signup</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link active" aria-current="page" href="#">내정보</a>
+                    <a class="nav-link active" aria-current="page" href="">내정보</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link active" aria-current="page" href="/logout">logout</a>
@@ -48,8 +49,9 @@
                     <h1 class="display-5 fw-bolder text-white mb-2">jambe</h1>
                     <p class="lead text-white-50 mb-4">원하는 서비스 클릭</p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/api/v1/board">게시판 입장</a>
-                        <a class="btn btn-outline-light btn-lg px-4" href="/board">게시판 생성</a>
+                        <button class="btn btn-primary" id="btn-board">게시판입장</button>
+                        <button class="btn btn-outline-light" id='btn-board-create'/>게시판 생성</button>
+
                     </div>
                 </div>
             </div>
@@ -64,7 +66,7 @@
                 <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-collection"></i></div>
                 <h2 class="h4 fw-bolder">Featured title</h2>
                 <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-                <a class="text-decoration-none" href="#!">
+                <a class="text-decoration-none" href="">
                     Call to action
                     <i class="bi bi-arrow-right"></i>
                 </a>
@@ -73,7 +75,7 @@
                 <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-building"></i></div>
                 <h2 class="h4 fw-bolder">Featured title</h2>
                 <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-                <a class="text-decoration-none" href="#!">
+                <a class="text-decoration-none" href="">
                     Call to action
                     <i class="bi bi-arrow-right"></i>
                 </a>
@@ -82,7 +84,7 @@
                 <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-toggles2"></i></div>
                 <h2 class="h4 fw-bolder">Featured title</h2>
                 <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-                <a class="text-decoration-none" href="#!">
+                <a class="text-decoration-none" href="">
                     Call to action
                     <i class="bi bi-arrow-right"></i>
                 </a>
@@ -95,5 +97,6 @@
 <footer class="py-5 bg-dark">
     <div class="container px-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
 </footer>
+<script src="/js/index.js"></script>
 </body>
 </html>

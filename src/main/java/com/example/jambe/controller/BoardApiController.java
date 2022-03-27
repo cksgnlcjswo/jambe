@@ -3,17 +3,24 @@ package com.example.jambe.controller;
 import com.example.jambe.domain.Board.Board;
 import com.example.jambe.domain.Post.Post;
 import com.example.jambe.dto.BoardDto;
+import com.example.jambe.dto.CustomIntegrationDto;
 import com.example.jambe.service.BoardService;
 import com.example.jambe.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.criterion.NullExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Null;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,14 +42,15 @@ public class BoardApiController {
     //admin용 게시판 생성 화면
     @GetMapping("/board")
     public String make() {
-
+        System.out.println("board");
         return "makeBoard";
     }
 
     //모든 종류의 게시판 보여주기
-    @GetMapping("/api/v1/board")
+    @GetMapping("/api/v1/boards")
     public String allBoard(Model model) {
 
+        System.out.println("hello wolrd");
         List<Board> boardList = boardService.findAll();
         model.addAttribute("Board",boardList);
 
@@ -65,4 +73,9 @@ public class BoardApiController {
 
         return "board";
     }
+    /*
+    @ExceptionHandler(NullPointerException.class)
+    public void nullex(Exception e) {
+        System.out.println("board error exception: "+e.getMessage());
+    }*/
 }

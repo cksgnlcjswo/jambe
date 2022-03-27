@@ -27,11 +27,20 @@ var main = {
         }
 
         const response = await fetch(url,config);
-        console.log(response);
-        if(response.ok) {
 
+        if(response.status == 404 || response.status == 401) {
+            let errorContent = document.getElementById('error');
+            errorContent.innerText = "유저정보를 확인해 주세요";
+            errorContent.style.color = 'red';
+        } else if(response.status == 200) {
+
+            const token = response.headers.get("Authorization");
+            localStorage.setItem('token', token);
+
+            alert("login success");
             window.location.href="/";
-        } else {
+        }
+        else {
             console.log("error!");
         }
     }

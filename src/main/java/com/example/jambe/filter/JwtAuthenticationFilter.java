@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -67,6 +68,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(SignatureAlgorithm.HS512, "secret") // 사용할 암호화 알고리즘, signature에 들어갈 secret 값 세팅
                 .compact();
 
-        response.addHeader("Authorization",jwtToken);
+        Cookie cookie = new Cookie("token",jwtToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*30);
+        System.out.println("cookie:"+cookie);
+        response.addCookie(cookie);
     }
 }

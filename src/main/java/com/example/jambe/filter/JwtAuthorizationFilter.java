@@ -13,11 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -32,20 +32,29 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String jwtHeader = request.getHeader("Authorization");
-
-        if(jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+        if(request.getCookies() == null) {
             chain.doFilter(request,response);
             return;
         }
 
-        String token = request.getHeader("Authorization").replace("Bearer ","");
-        System.out.println("token: " + token);
+        String jwtToken = Arrays.stream(request.getCookies())
+                        .filter(c -> c.getName().equals("token"))
+                        .findFirst()
+                        .map(c -> c.getValue())
+                        .orElse(null);
+
+        if(jwtToken == null) {
+            chain.doFilter(request,response);
+            return;
+        }
+
+        System.out.println("token: " + jwtToken);
 
         String account = Jwts.parser()
                 .setSigningKey("secret")
-                .parseClaimsJws(token)
+                .parseClaimsJws(jwtToken)
                 .getBody().getSubject();
+
         //서명 완료
         if(account != null) {
             System.out.println("account is not null");

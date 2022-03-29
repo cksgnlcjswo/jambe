@@ -50,23 +50,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         System.out.println("token: " + jwtToken);
 
-        String account = Jwts.parser()
+        String username = Jwts.parser()
                 .setSigningKey("secret")
                 .parseClaimsJws(jwtToken)
                 .getBody().getSubject();
 
         //서명 완료
-        if(account != null) {
-            System.out.println("account is not null");
-            Member member = memberRepository.findByAccount(account).get();
+        if(username != null) {
+            System.out.println("username is not null");
+            Member member = memberRepository.findByName(username).get();
 
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(member.getRoleKey()));
 
-            CustomIntegrationDto customIntegrationDto = new CustomIntegrationDto(member,
-                    member.getAccount(),
-                    member.getPasswd(),
-                    authorities);
+            CustomIntegrationDto customIntegrationDto = new CustomIntegrationDto(member.getName(), authorities);
 
             Authentication authentication =
                    new UsernamePasswordAuthenticationToken(customIntegrationDto,null, customIntegrationDto.getAuthorities());

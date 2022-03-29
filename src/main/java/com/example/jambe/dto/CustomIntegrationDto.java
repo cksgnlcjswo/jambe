@@ -29,6 +29,11 @@ public class CustomIntegrationDto implements IntegrationMember{
         this.authorities = Collections.unmodifiableSet(new LinkedHashSet<>(this.sortAuthorities(authorities)));
     }
 
+    public CustomIntegrationDto(String username, Collection<? extends GrantedAuthority> authorities) {
+        this.name = username;
+        this.authorities = Collections.unmodifiableSet(new LinkedHashSet<>(this.sortAuthorities(authorities)));
+    }
+
     public CustomIntegrationDto(Member member, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String nameAttributeKey) {
         this.defaultOAuth2User = new DefaultOAuth2User(authorities, attributes, nameAttributeKey);
         this.name = member.getName();

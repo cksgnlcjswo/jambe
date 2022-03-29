@@ -90,7 +90,7 @@ public class BoardApiControllerTest {
 
         when(boardService.findAll()).thenReturn(boardList);
 
-        mockMvc.perform(get("/api/v1/board").with(csrf()))
+        mockMvc.perform(get("/api/v1/boards").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boardList"))
                 .andExpect(model().attributeExists("Board")) //Board라는 모델이 context variable이 존재하는지

@@ -39,7 +39,7 @@ public class MemberService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRoleKey()));
 
-        return new CustomIntegrationDto(member, member.getAccount(), member.getPasswd(), authorities);
+        return new CustomIntegrationDto(member, member.getName(), member.getPasswd(), authorities);
     }
 
     public Long findByName(String username) {

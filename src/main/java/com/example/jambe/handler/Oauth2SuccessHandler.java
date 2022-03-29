@@ -7,15 +7,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException {
         System.out.println("oauth2 login success");
 
         CustomIntegrationDto customIntegrationDto = (CustomIntegrationDto)authentication.getPrincipal();
@@ -28,6 +30,11 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
                 .signWith(SignatureAlgorithm.HS512, "secret") // 사용할 암호화 알고리즘, signature에 들어갈 secret 값 세팅
                 .compact();
 
-        response.addHeader("Authorization",jwtToken);
+        Cookie cookie = new Cookie("token",jwtToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*30);
+        response.addCookie(cookie);
+        response.sendRedirect("/");
     }
 }

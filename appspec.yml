@@ -3,4 +3,4 @@ os: linux
 files:
   - source: /
     destination: /home/ec-user/app/step2/zip/
-    overwriter: yes
+    overwrite: yes

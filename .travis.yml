@@ -24,10 +24,10 @@ deploy:
     secret_access_key: $AWS_SECRET_KEY
     bucket: jambe-service-build
     region: ap-northeast-2
-    skip-cleanup: true
+    skip_cleanup: true
     acl: private
     local_dir: deploy
-    wait-until-deployed: true
+    wait_until_deployed: true
 
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY
@@ -38,7 +38,7 @@ deploy:
     application: jambe-service
     deployment_group: jambe-service-group
     region: ap-northeast-2
-    wai-until-deployed: true
+    wai_until_deployed: true
 
 notifications:
   email:

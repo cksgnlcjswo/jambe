@@ -1,3 +1,5 @@
+#travis ci에서 실행i
+
 language: java
 jdk:
   - openjdk11
@@ -12,7 +14,7 @@ cache:
     - '$HOME/ .gradle'
 
 script: "./gradlew clean build"
- 
+  
 before_deploy:
   - mkdir -p before-deploy
   - cp scripts/*.sh before-deploy/

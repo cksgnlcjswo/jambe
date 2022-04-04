@@ -17,7 +17,7 @@ script: "./gradlew clean build"
 before_deploy:
   - zip -r jambe-service *
   - mkdir -p deploy
-  - mv ~/jambe-service.zip ~/deploy/jambe-service.zip
+  - mv jambe-service.zip deploy/jambe-service.zip
 
 deploy:
   - provider: s3

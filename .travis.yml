@@ -13,7 +13,7 @@ cache:
 
 script: "./gradlew clean build"
 
-  
+#배포 이전 실행 
 before_deploy:
   - zip -r jambe-service *
   - mkdir -p deploy

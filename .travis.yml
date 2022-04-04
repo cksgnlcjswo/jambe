@@ -12,8 +12,7 @@ cache:
     - '$HOME/ .gradle'
 
 script: "./gradlew clean build"
-
-#배포 이전 실행 
+ 
 before_deploy:
   - mkdir -p before-deploy
   - cp scripts/*.sh before-deploy/

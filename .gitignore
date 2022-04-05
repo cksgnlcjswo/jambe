@@ -5,4 +5,6 @@ build/
 ./src/main/generated
 .out
 **/application-oauth.properties
+**/application-real.properties
+**/application-real-db.properties
 **/application.properties

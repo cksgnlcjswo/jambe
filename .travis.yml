@@ -43,7 +43,6 @@ notifications:
     - cksgnlcjswoo@naver.com
 before_install:
 - openssl aes-256-cbc -K $encrypted_e558ecafaec6_key -iv $encrypted_e558ecafaec6_iv
-  -in properties.ar.enc -out properties.tar -d
+  -in properties.tar.enc -out properties.tar -d
 - tar xvf properties.tar
-env:
-  secure: h2LOhNq0w+dBL3hBBAZTitHAyz5hb77/zLUL0g30dTsItnvOU25PdEYVKW003651UiUcVo0BlzzNyYrm+ilfH3M2ALwNm6aJBBT6bxkJQPU5taME45b2oY8kTHdKUr2dlzR0SXVsQNo55gCSr8z6SoAwwQAhA8pn0KdWpoKi/41AyN/KvWVr6VbdqdLIyVTYNykpE7bYTmaNJ3ylwCEztqdwinxpTmE8B/Wyi6493alPURY+svY6Z3lRth7/tYqNDIdw+ZI9zuwxPlnBWBol3Xbl+mn5WS4+5xnHYEJkWzTuEWOg2V7a9Q3tdqCqEiRNp0uxKRtmped3GrwpMNW0pPCA/tLr/wrXMnMWkTcnsy6OTaaV3w6dRWNtz2Kuq4lqRW5nb6MYYrgc9UYBfQepZRbpeD+OLcLT+7Ls8zZw8NHN3r0lgUkpVX8qnxq/xnWMZEj+UoPxo4jFZJv68ZzE3KR3r+D4zO2nbLTZGOz7nmVU+MRUprbnkXBOmDQGrNv/CsemSiy6kKAapSeTr5KpNJDAD055inU16tCto8l4GBTepw0S8vJe02/bpiD0CfRe+6t9ryw+1HyrOdYUNnk+mWB8E2haG5RmKq2Tzds41RqTZPl2AYww5NsihvryKP92hIGYGn2Ljd2yuarXp+AjAz8Ap/Ej1AwikgCjiSyqkJ0=
+

@@ -7,4 +7,3 @@ build/
 **/application-oauth.properties
 **/application-real.properties
 **/application-real-db.properties
-**/application.properties

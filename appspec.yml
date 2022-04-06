@@ -1,4 +1,4 @@
-# codedeploy 설정
+# codedeploy설정 파일
 version: 0.0
 os: linux
 files:

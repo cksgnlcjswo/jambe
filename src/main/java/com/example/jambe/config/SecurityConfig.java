@@ -22,7 +22,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
-
+/*
+    Spring security 설정 class.
+    Author: 찬휘
+*/
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,12 +36,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
+    /*
+        해당 패턴에 매칭되는 url은 spring security filter chain을 거치지 않음.
+    */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**","/static/**", "/css/**", "/js/**", "/images/**","/fonts/**",
                 "/h2-console/**","/resources/templates/**");
     }
-
+    /*
+        spring security jwt 인증 인가 처리위한 flter 추가와 oauth2 로그인 성공 이후 token 제공 filter 추가
+    */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -56,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),memberRepository))
                 .authorizeRequests()
                 .antMatchers( "/user/signup","/auth/login","/","/resources/**","/static/**",
-                        "/css/**", "/js/**", "/images/**","/fonts/**","/h2-console/**","/profile").permitAll()
+                        "/css/**", "/js/**", "/images/**","/fonts/**","/h2-console/**","/profile","/docs/**").permitAll()
                 .antMatchers("/api/**").hasRole("GUEST")
                 .antMatchers("/board").hasRole("ADMIN")
                 .anyRequest().authenticated()

@@ -7,7 +7,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-
+/*
+    Cors 관련 설정 클래스
+    Author: 찬휘
+    Email : cksgnlcjswoo@naver.com
+*/
 @Configuration
 public class CorsConfig {
 

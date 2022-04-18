@@ -1,0 +1,11 @@
+:snippetsDir: build/generated-snippets
+
+= Jambe Index Page Rest Docs
+
+Jambe service running at http://localhost:8080:
+
+.request
+include::{snippetsDir}/index/http-request.adoc[]
+
+.response
+include::{snippetsDir}/index/http-response.adoc[]

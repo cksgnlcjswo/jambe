@@ -1,0 +1,13 @@
+:snippetsDir: build/generated-snippets
+
+=Jambe 게시판 생성
+
+ADMIN권한으로 board api 생성방법
+
+어떤 카테고리인지 요청할 때 보내주면 됩니다
+.request
+include::{snippetsDir}/post-new-board/http-request.adoc[]
+
+게시판이 생성되면 아래와 같이 반환해줍니다
+.response
+include::{snippetsDir}/post-new-board/http-response.adoc[]

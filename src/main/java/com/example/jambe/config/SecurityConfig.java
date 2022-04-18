@@ -41,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     */
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**","/static/**", "/css/**", "/js/**", "/images/**","/fonts/**",
-                "/h2-console/**","/resources/templates/**");
+        web.ignoring().antMatchers("/static/**", "/css/**", "/js/**", "/images/**","/fonts/**",
+                "/h2-console/**","/resources/templates/**","/docs/**");
     }
     /*
         spring security jwt 인증 인가 처리위한 flter 추가와 oauth2 로그인 성공 이후 token 제공 filter 추가
@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),memberRepository))
                 .authorizeRequests()
-                .antMatchers( "/user/signup","/auth/login","/","/resources/**","/static/**",
+                .antMatchers( "/user/signup","/auth/login","/","/static/**",
                         "/css/**", "/js/**", "/images/**","/fonts/**","/h2-console/**","/profile","/docs/**").permitAll()
                 .antMatchers("/api/**").hasRole("GUEST")
                 .antMatchers("/board").hasRole("ADMIN")

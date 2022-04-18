@@ -1,9 +1,0 @@
-= Jambe Index Page Rest Docs
-
-Jambe service running at http://localhost:8080:
-
-.request
-include::{snippets}/index/http-request.adoc[]
-
-.response
-include::{snippets}/index/http-response.adoc[]

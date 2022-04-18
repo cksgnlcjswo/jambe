@@ -13,12 +13,11 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExtensions
 }
 
-asciidoctor {
-	sourceDir 'src/main/asciidoc'
-	attributes \
-      'snippets': file('target/snippets')
+ext {
+	snippetsDir = file('build/generated-snippets')
 }
 
 repositories {
@@ -52,13 +51,20 @@ dependencies {
 }
 
 tasks.test {
+	outputs.dir snippetsDir
 	useJUnitPlatform()
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
 }
 
 bootJar {
 	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs'    // /static/docs로 복사!
 	}
 }
 

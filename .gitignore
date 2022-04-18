@@ -2,8 +2,6 @@ HELP.md
 .gradle
 .idea
 build/
-./src/main/generated
-.out
 **/application-oauth.properties
 **/application-real-db.properties
 **/properties.tar

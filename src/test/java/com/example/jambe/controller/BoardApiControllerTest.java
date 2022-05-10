@@ -98,8 +98,8 @@ public class BoardApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("boardList"))
                 .andExpect(model().attributeExists("Board")) //Board라는 모델이 context variable이 존재하는지
-                .andExpect(model().attribute("Board", IsCollectionWithSize.hasSize(3))); // jobs model의 size가 3인지 확인
-
+                .andExpect(model().attribute("Board", IsCollectionWithSize.hasSize(3))) // jobs model의 size가 3인지 확인
+                .andDo(document("find-all-board"));
     }
 
     @Test

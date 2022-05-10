@@ -50,14 +50,13 @@ public class BoardApiController {
     @GetMapping("/api/v1/boards")
     public String allBoard(Model model) {
 
-        System.out.println("hello wolrd");
         List<Board> boardList = boardService.findAll();
         model.addAttribute("Board",boardList);
 
         return "boardList";
     }
 
-    //종류별 게시판 입장
+    //종류별 게시판 입장 후 페이징
     //ex) /api/v1/board1/1
     @GetMapping("/api/v1/board/{id}")
     public String Board(@PathVariable Long id,
